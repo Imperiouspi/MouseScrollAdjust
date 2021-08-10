@@ -2,19 +2,42 @@
 //
 
 #include <iostream>
+#include <Windows.h>
+#include <WinUser.h>
+#include <string>
 
-int main()
+using namespace std;
+
+int main(int argc, char *argv[])
 {
-    std::cout << "Hello World!\n";
+	//  UINT  uiAction,
+	//	UINT  uiParam, - set
+	//	PVOID pvParam, - set
+	//	UINT  fWinIni - SPIF_SENDCHANGE if setting
+	UINT old_scroll;
+	UINT new_scroll = 3;
+	if (argc < 2 ) {
+		cout << "Use 'get' or enter an integer";
+		exit(EXIT_FAILURE);
+	}
+	else {
+		string arg = argv[1];
+		if (arg.compare("get") == 0 || arg.compare("GET") == 0 || arg.compare("Get") == 0) {
+				SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &old_scroll, 0);
+				cout << old_scroll;
+				exit(EXIT_SUCCESS);
+		}
+		else if (atoi(argv[1]) < 0) {
+			cout << "Invalid Number";
+		}
+		else {
+			new_scroll = atoi(argv[1]);
+			SystemParametersInfo(SPI_SETWHEELSCROLLLINES, new_scroll, 0, 3);
+			cout << new_scroll;
+			exit(EXIT_SUCCESS);
+		}
+	}
+
+
+	exit(EXIT_FAILURE);
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
